@@ -1,6 +1,4 @@
-​	
-
-1、 **if** 语句或者 **case when** 语句写法
+##### 1、 **if** 语句或者 **case when** 语句写法
 
 ![image-20230130210551373](E:\Learn\markdown\数据库\png\mysql基本语法\1.png)
 
@@ -24,7 +22,7 @@ update Salary set sex=if(sex='m','f','m')
 update Salary set sex= case sex when 'f' then 'm' else 'f' end;
 ```
 
-2、 **like+%** 取余、 **mod** 和 **left** 函数、 **if** 判断和 **mod** 取余、 **case** 函数、正则匹配、**&** 预算与 **regexp** 运算
+##### 2、 **like+%** 取余、 **mod** 和 **left** 函数、 **if** 判断和 **mod** 取余、 **case** 函数、正则匹配、**&** 预算与 **regexp** 运算
 
 ![image-20230130212049955](E:\Learn\markdown\数据库\png\mysql基本语法\3.png)
 
@@ -134,7 +132,7 @@ from employees
 order by employee_id;
 ```
 
-3、开窗函数 **row_number()** 、自连接、 **not in** 、分析函数 **dense_rank()**
+##### 3、开窗函数 **row_number()** 、自连接、 **not in** 、分析函数 **dense_rank()**
 
 ![image-20230130233242716](E:\Learn\markdown\数据库\png\mysql基本语法\5.png)
 
@@ -184,4 +182,58 @@ where id not in (
 ```
 
 分析函数 **dense_rank()**
+
+##### 4、 **concat** 函数、 **lower** 函数、 **upper** 函数、 **left** 函数、 **right** 函数、 **length** 函数
+
+**concat(str1,str2,...) :** 合并字符串函数
+
+**lower(str) :** 将字符串中字母转换成小写的函数
+
+**upper(str) :** 将字符串中字母转换成大写的函数
+
+**left(str,n) :** 获得字符串左边n个字符
+
+**right(str,n) :** 获得字符串右边n个字符
+
+**length(str) :** 获得字符串的长度
+
+![image-20230201232220039](E:\Learn\数据库\learn_mysql\png\mysql基本语法\7.png)
+
+编写一个 SQL 查询来修复名字，使得只有第一个字符是大写的，其余都是小写的。
+
+返回按 `user_id` 排序的结果表。
+
+查询结果格式示例如下。
+
+![image-20230201232302753](E:\Learn\数据库\learn_mysql\png\mysql基本语法\8.png)
+
+```mysql
+select user_id,
+       concat(upper(left(name,1)),lower(right(name,length(name)-1))) as name
+from Users
+order by user_id;
+```
+
+##### 5、**group_concat** 函数、分割 **separator**
+
+![image-20230201233803573](E:\Learn\数据库\learn_mysql\png\mysql基本语法\9.png)
+
+编写一个 SQL 查询来查找每个日期、销售的不同产品的数量及其名称。
+每个日期的销售产品名称应按词典序排列。
+返回按 `sell_date` 排序的结果表。
+查询结果格式如下例所示。
+
+![image-20230201233850171](E:\Learn\数据库\learn_mysql\png\mysql基本语法\10.png)
+
+```mysql
+select 
+    sell_date, 
+    # 获取“不同的”产品数【count(distinct product)】
+    count(distinct product) as num_sold, 
+    # “不同的”【distinct product】产品按照字典排序【order by product】  & “,”分割【separator ','】
+    group_concat(distinct product order by product separator ',') as products
+from Activities
+group by sell_date
+order by sell_date;
+```
 
