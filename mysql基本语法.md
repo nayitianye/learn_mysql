@@ -1,6 +1,6 @@
 ##### 1、 **if** 语句或者 **case when** 语句写法
 
-![image-20230130210551373](E:\Learn\markdown\数据库\png\mysql基本语法\1.png)
+![image-20230130210551373](E:\Learn\数据库\learn_mysql\png\mysql基本语法\1.png)
 
 请你编写一个 SQL 查询来交换所有的 `'f'` 和 `'m'` （即，将所有 `'f'` 变为 `'m'` ，反之亦然），仅使用 **单个 update 语句** ，且不产生中间临时表。
 
@@ -8,7 +8,7 @@
 
 查询结果如下例所示。
 
-![image-20230130210703186](E:\Learn\markdown\数据库\png\mysql基本语法\2.png)
+![image-20230130210703186](E:\Learn\数据库\learn_mysql\png\mysql基本语法\2.png)
 
 **If** 语句：
 
@@ -24,7 +24,7 @@ update Salary set sex= case sex when 'f' then 'm' else 'f' end;
 
 ##### 2、 **like+%** 取余、 **mod** 和 **left** 函数、 **if** 判断和 **mod** 取余、 **case** 函数、正则匹配、**&** 预算与 **regexp** 运算
 
-![image-20230130212049955](E:\Learn\markdown\数据库\png\mysql基本语法\3.png)
+![image-20230130212049955](E:\Learn\数据库\learn_mysql\png\mysql基本语法\3.png)
 
 写出一个SQL 查询语句，计算每个雇员的奖金。如果一个雇员的id是奇数并且他的名字不是以'M'开头，那么他的奖金是他工资的100%，否则奖金为0。
 
@@ -34,7 +34,7 @@ Return the result table ordered by `employee_id`.
 
 查询结果格式如下面的例子所示。
 
-![image-20230130212128953](E:\Learn\markdown\数据库\png\mysql基本语法\4.png)
+![image-20230130212128953](E:\Learn\数据库\learn_mysql\png\mysql基本语法\4.png)
 
  **like+%** 取余
 
@@ -134,7 +134,7 @@ order by employee_id;
 
 ##### 3、开窗函数 **row_number()** 、自连接、 **not in** 、分析函数 **dense_rank()**
 
-![image-20230130233242716](E:\Learn\markdown\数据库\png\mysql基本语法\5.png)
+![image-20230130233242716](E:\Learn\数据库\learn_mysql\png\mysql基本语法\5.png)
 
 编写一个 SQL **删除语句**来 **删除** 所有重复的电子邮件，只保留一个id最小的唯一电子邮件。
 
@@ -142,7 +142,7 @@ order by employee_id;
 
 查询结果格式如下所示。
 
-![image-20230130233325630](E:\Learn\markdown\数据库\png\mysql基本语法\6.png)
+![image-20230130233325630](E:\Learn\数据库\learn_mysql\png\mysql基本语法\6.png)
 
 开窗函数 **row_number()**
 
@@ -235,5 +235,79 @@ select
 from Activities
 group by sell_date
 order by sell_date;
+```
+
+##### 6、**datediff** 函数
+
+![image-20230206222206632](E:\Learn\数据库\learn_mysql\png\mysql基本语法\11.png)
+
+请写SQL查询出截至 `2019-07-27`（包含2019-07-27），近 `30` 天的每日活跃用户数（当天只要有一条活动记录，即为活跃用户）。
+
+以 **任意顺序** 返回结果表。
+
+查询结果示例如下。
+
+![image-20230206222342794](E:\Learn\数据库\learn_mysql\png\mysql基本语法\12.png)
+
+```mysql
+select activity_date as day,count(distinct user_id) as active_users
+from Activity 
+where datediff('2019-07-27',activity_date)>=0 and datediff('2019-07-27',activity_date)<30
+group by activity_date
+```
+
+##### 7、**year** 函数、**max** 函数
+
+![image-20230206223831279](E:\Learn\数据库\learn_mysql\png\mysql基本语法\13.png)
+
+编写一个 SQL 查询，该查询可以获取在 `2020` 年登录过的所有用户的本年度 **最后一次** 登录时间。结果集 **不** 包含 `2020` 年没有登录过的用户。
+
+返回的结果集可以按 **任意顺序** 排列。
+
+查询结果格式如下例。
+
+![image-20230206223914629](E:\Learn\数据库\learn_mysql\png\mysql基本语法\14.png)
+
+```mysql
+select user_id,max(time_stamp) as last_stamp
+from Logins
+where year(time_stamp) =2020
+group by user_id;
+```
+
+##### 8、**sum** 函数
+
+![image-20230206224752115](E:\Learn\数据库\learn_mysql\png\mysql基本语法\15.png)
+
+编写一个SQL查询以计算每位员工每天在办公室花费的总时间（以分钟为单位）。 请注意，在一天之内，同一员工是可以多次进入和离开办公室的。 在办公室里一次进出所花费的时间为out_time 减去 in_time。
+
+返回结果表单的顺序无要求。
+查询结果的格式如下：
+
+![image-20230206224840982](E:\Learn\数据库\learn_mysql\png\mysql基本语法\16.png)
+
+```mysql
+select event_day as day,emp_id,
+       sum(out_time-in_time) as total_time
+from Employees
+group by event_day,emp_id
+order by event_day,emp_id;
+```
+
+##### 9、**min** 函数
+
+![image-20230206225247710](E:\Learn\数据库\learn_mysql\png\mysql基本语法\17.png)
+
+写一条 SQL 查询语句获取每位玩家 **第一次登陆平台的日期**。
+
+查询结果的格式如下所示：
+
+![image-20230206225321832](E:\Learn\数据库\learn_mysql\png\mysql基本语法\18.png)
+
+```mysql
+select player_id,min(event_date) as first_login
+from Activity
+group by player_id
+order by player_id;
 ```
 
